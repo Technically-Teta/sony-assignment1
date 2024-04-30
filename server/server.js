@@ -4,6 +4,11 @@ const axios = require('axios');
 const app = express();
 const port = 3004;
 
+//this stays here or will get error
+app.get('/', (req, res) => {
+    res.send('Welcome to the Library Management System!');
+});
+
 
 
 app.get('/api/openlibrary', async (req, res) => {
