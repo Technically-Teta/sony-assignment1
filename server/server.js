@@ -7,7 +7,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const db = require('./db/db-connection.js'); 
+const db = require('./DB/db-connection.js'); 
 
 
 // Configuring cors middleware
