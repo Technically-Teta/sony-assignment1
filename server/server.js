@@ -4,7 +4,6 @@ const app = express();
 const port = 3004;
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
 require('dotenv').config();
 
 const db = require('./DB/db-connection.js'); 
@@ -64,9 +63,9 @@ app.get('/api/openlibrary', async (req, res) => {
 // GET all users  real connection with DB users
 app.get('/api/users', async (req, res) => {
     try {
-      const {rows:users} = await db.query('SELECT * FROM users');
+      const {rows : users} = await db.query('SELECT * FROM users');
       console.log("In the server", users)
-      res.send(users.rows);
+      res.send(users);
 
     } catch (error) {
       console.log(error);
