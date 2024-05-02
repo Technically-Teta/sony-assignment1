@@ -4,6 +4,10 @@ const app = express();
 const port = 3004;
 const bodyParser = require('body-parser');
 const cors = require('cors');
+<<<<<<< HEAD
+=======
+const path = require('path');
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
 require('dotenv').config();
 
 const db = require('./db/db-connection.js'); 
@@ -15,13 +19,28 @@ const db = require('./db/db-connection.js');
 app.use(cors({
     origin: 'http://localhost:3004'
   }));
+<<<<<<< HEAD
 
 
+=======
+  
+
+
+  
+
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
 //this stays here or will get error
 app.get('/', (req, res) => {
     res.send('Welcome to the Library Management System!');
@@ -29,6 +48,7 @@ app.get('/', (req, res) => {
 
 
 // OPEN API GET  request
+<<<<<<< HEAD
 // Route for searching the entire Open Library database
 app.get('/api/openlibrary/search', async (req, res) => {
   try {
@@ -247,13 +267,44 @@ app.post('/api/circulation/reserve', async (req, res) => {
 
 
 // WORKING WITH CRUD FOR [USERS] -
+=======
+app.get('/api/openlibrary', async (req, res) => {
+    try {
+        // Call the Open Library API endpoint
+        const response = await axios.get('https://openlibrary.org/search.json?q=harry+potter');
+
+        // Extract relevant data from the response and format it
+        const books = response.data.docs.map(book => ({
+            title: book.title,
+            author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
+            isbn: book.isbn ? book.isbn[0] : 'ISBN Not Available',
+            publication_year: book.publish_year ? parseInt(book.publish_year[0]) : null,
+            description: book.description ? book.description.value : 'Description Not Available'
+        }));
+
+        // Send the extracted book data as response
+        res.json(books);
+    } catch (error) {
+        console.error('Error fetching book data from Open Library API:', error);
+        res.status(500).json({ error: 'Failed to fetch book data from Open Library API' });
+    }
+});
+
+// WORKING WITH TABLES
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
 
 // GET all users  real connection with DB users
 app.get('/api/users', async (req, res) => {
     try {
+<<<<<<< HEAD
       const {rows : users} = await db.query('SELECT * FROM users');
       console.log("In the server", users)
       res.send(users);
+=======
+      const {rows:users} = await db.query('SELECT * FROM users');
+      console.log("In the server", users)
+      res.send(users.rows);
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
 
     } catch (error) {
       console.log(error);
@@ -261,7 +312,14 @@ app.get('/api/users', async (req, res) => {
     }
   });
 
+<<<<<<< HEAD
   // POST a new user (create a user)
+=======
+
+
+  
+  // POST a new user
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
   app.post('/api/users', async (req, res) => {
     try {
       const { username, password, email } = req.body;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Quick-setup 
 
 #### Once you have successfully setup this template and initial database, the view will look like this:
@@ -40,3 +41,7 @@ Your DB should look like this inside the psql terminal
 
 
 
+=======
+# sony-assignment1
+Submission one for sponsorship
+>>>>>>> 0705a69b626caed2e1a6c79989c74a89cbcbf241
