@@ -56,7 +56,74 @@ app.get('/api/openlibrary/search', async (req, res) => {
   }
 });
 
-// WORKING WITH CRUD
+// GET /books
+app.get('/api/books', async (req, res) => {
+  try {
+    const {rows : books} = await db.query('SELECT * FROM books');
+    console.log("In the server", books)
+    res.send(books);
+
+  } catch (error) {
+    console.log(error);
+  return res.status(400).json({error});
+  }
+});
+
+
+
+
+// Route for checking out a book [BORROW]
+app.post('/api/circulation/check-out', async (req, res) => {
+  try {
+      // Process check-out logic here
+      // Example: Retrieve user ID and book ID from request body
+      const { userId, bookId } = req.body;
+      
+      // Perform necessary operations (e.g., update database, call external services)
+
+      res.json({ message: 'Book checked out successfully' });
+  } catch (error) {
+      console.error('Error checking out book:', error);
+      res.status(500).json({ error: 'Failed to check out book' });
+  }
+});
+
+// Route for checking in a book
+app.post('/api/circulation/check-in', async (req, res) => {
+  try {
+      // Process check-in logic here
+      // Example: Retrieve book ID from request body
+      const { bookId } = req.body;
+      
+      // Perform necessary operations (e.g., update database, call external services)
+
+      res.json({ message: 'Book checked in successfully' });
+  } catch (error) {
+      console.error('Error checking in book:', error);
+      res.status(500).json({ error: 'Failed to check in book' });
+  }
+});
+
+// Route for reserving a book
+app.post('/api/circulation/reserve', async (req, res) => {
+  try {
+      // Process reservation logic here
+      // Example: Retrieve user ID and book ID from request body
+      const { userId, bookId } = req.body;
+      
+      // Perform necessary operations (e.g., update database, call external services)
+
+      res.json({ message: 'Book reserved successfully' });
+  } catch (error) {
+      console.error('Error reserving book:', error);
+      res.status(500).json({ error: 'Failed to reserve book' });
+  }
+});
+
+
+
+
+// WORKING WITH CRUD FOR USERS -
 
 // GET all users  real connection with DB users
 app.get('/api/users', async (req, res) => {
