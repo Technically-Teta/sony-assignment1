@@ -1,0 +1,55 @@
+.App {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.Events {
+  box-shadow: 1px, gray;
+}
+
+h1 {
+  color: #00556e;
+  margin-bottom: 50px !important;
+}
+
+form{
+  margin-top: 50px;
+}
+
+.button {
+  border-radius: 8px;
+  font-size: 20px;
+  background-color: rgb(28, 137, 226);
+  border: black solid transparent;
+  color: white;
+  margin-left: 70px;
+  margin-top: 100px;
+}
+
+.btn{
+
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  background-image: linear-gradient(to right,#e052a0,#f15c41);
+  cursor: pointer;
+  border-radius: 2px;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  text-transform: uppercase;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+  :hover {
+      background-image: linear-gradient(to right,#3ec7e0,#526bf4);
+  }
+  
+:icon-id{
+color: #e052a0;
+border-color: coral;
+}

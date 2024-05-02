@@ -15,18 +15,11 @@ const db = require('./DB/db-connection.js');
 app.use(cors({
     origin: 'http://localhost:3004'
   }));
-  
 
-
-  
 
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-
-
-
 
 
 //this stays here or will get error
@@ -36,29 +29,34 @@ app.get('/', (req, res) => {
 
 
 // OPEN API GET  request
-app.get('/api/openlibrary', async (req, res) => {
-    try {
-        // Call the Open Library API endpoint
-        const response = await axios.get('https://openlibrary.org/search.json?q=harry+potter');
+// Route for searching the entire Open Library database
+app.get('/api/openlibrary/search', async (req, res) => {
+  try {
+      const { query } = req.query;
+      if (!query) {
+          return res.status(400).json({ error: 'Query parameter is required' });
+      }
 
-        // Extract relevant data from the response and format it
-        const books = response.data.docs.map(book => ({
-            title: book.title,
-            author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
-            isbn: book.isbn ? book.isbn[0] : 'ISBN Not Available',
-            publication_year: book.publish_year ? parseInt(book.publish_year[0]) : null,
-            description: book.description ? book.description.value : 'Description Not Available'
-        }));
+      // Call the Open Library API search endpoint
+      const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
+      
+      // Extract relevant data from the response
+      const searchResults = response.data.docs.map(book => ({
+          title: book.title,
+          author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
+          isbn: book.isbn ? book.isbn[0] : 'ISBN Not Available',
+          publication_year: book.publish_year ? parseInt(book.publish_year[0]) : null,
+          description: book.description ? book.description.value : 'Description Not Available'
+      }));
 
-        // Send the extracted book data as response
-        res.json(books);
-    } catch (error) {
-        console.error('Error fetching book data from Open Library API:', error);
-        res.status(500).json({ error: 'Failed to fetch book data from Open Library API' });
-    }
+      res.json(searchResults);
+  } catch (error) {
+      console.error('Error searching Open Library:', error);
+      res.status(500).json({ error: 'Failed to search Open Library' });
+  }
 });
 
-// WORKING WITH TABLES
+// WORKING WITH CRUD
 
 // GET all users  real connection with DB users
 app.get('/api/users', async (req, res) => {
@@ -73,10 +71,7 @@ app.get('/api/users', async (req, res) => {
     }
   });
 
-
-
-  
-  // POST a new user
+  // POST a new user (create a user)
   app.post('/api/users', async (req, res) => {
     try {
       const { username, password, email } = req.body;
