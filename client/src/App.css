@@ -17,3 +17,11 @@ h1 {
 form{
   margin-top: 50px;
 }
+
+/* When answer button is hovered over */s
+button:hover {
+  background-color: #279EFF;
+  box-shadow: 0 2px 6px #337CCF;
+  border: 1px solid #141E46;
+  border-radius: 6%;
+}
