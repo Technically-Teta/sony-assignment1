@@ -56,6 +56,9 @@ app.get('/api/openlibrary/search', async (req, res) => {
   }
 });
 
+
+// WORKING WITH CRUD FOR [BOOKS] -
+
 // GET /books
 app.get('/api/books', async (req, res) => {
   try {
@@ -69,18 +72,28 @@ app.get('/api/books', async (req, res) => {
   }
 });
 
-
-
-
-// Route for checking out a book [BORROW]
+// Route for checking out a book
 app.post('/api/circulation/check-out', async (req, res) => {
   try {
-      // Process check-out logic here
-      // Example: Retrieve user ID and book ID from request body
       const { userId, bookId } = req.body;
       
-      // Perform necessary operations (e.g., update database, call external services)
-
+      // Check if the book is available for checkout
+      const checkAvailabilityQuery = `
+          SELECT * FROM books 
+          WHERE book_id = ${bookId} AND checked_out_by IS NULL`;
+      const availabilityResult = await db.query(checkAvailabilityQuery);
+      
+      if (availabilityResult.rows.length === 0) {
+          return res.status(400).json({ error: 'Book is not available for checkout' });
+      }
+      
+      // Update the book status to checked out
+      const updateQuery = `
+          UPDATE books
+          SET checked_out_by = ${userId}, checkout_date = CURRENT_DATE
+          WHERE book_id = ${bookId}`;
+      await db.query(updateQuery);
+      
       res.json({ message: 'Book checked out successfully' });
   } catch (error) {
       console.error('Error checking out book:', error);
@@ -88,31 +101,143 @@ app.post('/api/circulation/check-out', async (req, res) => {
   }
 });
 
-// Route for checking in a book
-app.post('/api/circulation/check-in', async (req, res) => {
+// Route for returning a book
+app.post('/api/circulation/return', async (req, res) => {
   try {
-      // Process check-in logic here
-      // Example: Retrieve book ID from request body
-      const { bookId } = req.body;
+      const { userId, bookId } = req.body;
       
-      // Perform necessary operations (e.g., update database, call external services)
-
-      res.json({ message: 'Book checked in successfully' });
+      // Check if the book is checked out by the user
+      const checkOwnershipQuery = `
+          SELECT * FROM books 
+          WHERE book_id = ${bookId} AND checked_out_by = ${userId}`;
+      const ownershipResult = await db.query(checkOwnershipQuery);
+      
+      if (ownershipResult.rows.length === 0) {
+          return res.status(400).json({ error: 'Book is not checked out by the user' });
+      }
+      
+      // Update the book status to checked in
+      const updateQuery = `
+          UPDATE books
+          SET checked_out_by = NULL, return_date = CURRENT_DATE
+          WHERE book_id = ${bookId}`;
+      await db.query(updateQuery);
+      
+      res.json({ message: 'Book returned successfully' });
   } catch (error) {
-      console.error('Error checking in book:', error);
-      res.status(500).json({ error: 'Failed to check in book' });
+      console.error('Error returning book:', error);
+      res.status(500).json({ error: 'Failed to return book' });
   }
 });
 
 // Route for reserving a book
 app.post('/api/circulation/reserve', async (req, res) => {
   try {
-      // Process reservation logic here
-      // Example: Retrieve user ID and book ID from request body
       const { userId, bookId } = req.body;
       
-      // Perform necessary operations (e.g., update database, call external services)
-
+      // Check if the book is available for reservation
+      const checkAvailabilityQuery = `
+          SELECT * FROM books 
+          WHERE book_id = ${bookId} AND reserved_by IS NULL`;
+      const availabilityResult = await db.query(checkAvailabilityQuery);
+      
+      if (availabilityResult.rows.length === 0) {
+          return res.status(400).json({ error: 'Book is not available for reservation' });
+      }
+      
+      // Update the book status to reserved
+      const updateQuery = `
+          UPDATE books
+          SET reserved_by = ${userId}, reservation_date = CURRENT_DATE
+          WHERE book_id = ${bookId}`;
+      await db.query(updateQuery);// Route for checking out a book
+      app.post('/api/circulation/check-out', async (req, res) => {
+          try {
+              const { userId, bookId } = req.body;
+              
+              // Check if the book is available for checkout
+              const checkAvailabilityQuery = `
+                  SELECT * FROM books 
+                  WHERE book_id = ${bookId} AND checked_out_by IS NULL`;
+              const availabilityResult = await db.query(checkAvailabilityQuery);
+              
+              if (availabilityResult.rows.length === 0) {
+                  return res.status(400).json({ error: 'Book is not available for checkout' });
+              }
+              
+              // Update the book status to checked out
+              const updateQuery = `
+                  UPDATE books
+                  SET checked_out_by = ${userId}, checkout_date = CURRENT_DATE
+                  WHERE book_id = ${bookId}`;
+              await db.query(updateQuery);
+              
+              res.json({ message: 'Book checked out successfully' });
+          } catch (error) {
+              console.error('Error checking out book:', error);
+              res.status(500).json({ error: 'Failed to check out book' });
+          }
+      });
+      
+      // Route for checking in a book
+      app.post('/api/circulation/check-in', async (req, res) => {
+          try {
+              const { userId, bookId } = req.body;
+              
+              // Check if the book is checked out by the user
+              const checkOwnershipQuery = `
+                  SELECT * FROM books 
+                  WHERE book_id = ${bookId} AND checked_out_by = ${userId}`;
+              const ownershipResult = await db.query(checkOwnershipQuery);
+              
+              if (ownershipResult.rows.length === 0) {
+                  return res.status(400).json({ error: 'Book is not checked out by the user' });
+              }
+              
+              // Update the book status to checked in
+              const updateQuery = `
+                  UPDATE books
+                  SET checked_out_by = NULL, return_date = CURRENT_DATE
+                  WHERE book_id = ${bookId}`;
+              await db.query(updateQuery);
+              
+              res.json({ message: 'Book checked in successfully' });
+          } catch (error) {
+              console.error('Error checking in book:', error);
+              res.status(500).json({ error: 'Failed to check in book' });
+          }
+      });
+      
+      // Route for reserving a book
+      app.post('/api/circulation/reserve', async (req, res) => {
+          try {
+              const { userId, bookId } = req.body;
+              
+              // Check if the book is available for reservation
+              const checkAvailabilityQuery = `
+                  SELECT * FROM books 
+                  WHERE book_id = ${bookId} AND reserved_by IS NULL`;
+              const availabilityResult = await db.query(checkAvailabilityQuery);
+              
+              if (availabilityResult.rows.length === 0) {
+                  return res.status(400).json({ error: 'Book is not available for reservation' });
+              }
+              
+              // Update the book status to reserved
+              const updateQuery = `
+                  UPDATE books
+                  SET reserved_by = ${userId}, reservation_date = CURRENT_DATE
+                  WHERE book_id = ${bookId}`;
+              await db.query(updateQuery);
+              
+              res.json({ message: 'Book reserved successfully' });
+          } catch (error) {
+              console.error('Error reserving book:', error);
+              res.status(500).json({ error: 'Failed to reserve book' });
+          }
+      });
+      
+      
       res.json({ message: 'Book reserved successfully' });
   } catch (error) {
       console.error('Error reserving book:', error);
@@ -121,9 +246,7 @@ app.post('/api/circulation/reserve', async (req, res) => {
 });
 
 
-
-
-// WORKING WITH CRUD FOR USERS -
+// WORKING WITH CRUD FOR [USERS] -
 
 // GET all users  real connection with DB users
 app.get('/api/users', async (req, res) => {
