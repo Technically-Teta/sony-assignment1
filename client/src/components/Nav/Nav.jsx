@@ -20,6 +20,10 @@ class Nav extends React.Component {
                     <li style={window.location.pathname === '/search' ? { display: 'none' } : { display: 'inline-block' }}>
                         <Link to='/search' onClick={this.props.update}>Search</Link>
                     </li>
+                  
+                    <li style={window.location.pathname === '/myprofile' ? { display: 'none' } : { display: 'inline-block' }}>
+                        <Link to='/myprofile' onClick={this.props.update}>My Profile</Link>
+                    </li>
                 </ul>
             </div>
         );

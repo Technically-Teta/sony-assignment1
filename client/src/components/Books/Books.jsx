@@ -1,56 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Books.css';
 
-class Books extends React.Component {
+const Books = () => {
+    const [books, setBooks] = useState([]);
     
-    state = {
-        header: <thead id="header">
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const response = await fetch("/api/getBooks");
+                const data = await response.json();
+                const filteredBooks = data.filter(book => book.count > 0);
+                setBooks(filteredBooks);
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+
+        fetchBooks();
+    }, []);
+
+    return (
+        <div id='books'>
+            <span id="heading">AVAILABLE BOOKS TO BORROW</span>
+            <table id="results" className="table text-center table-hover">
+                <thead id="header">
                     <tr>
                         <th scope="col">Book Name</th>
                         <th scope="col">Author</th>
-                        <th scope="col">Total Count</th>
-                        <th scope="col">Semester No</th>
+                        <th scope="col">Title</th>
                     </tr>
-                </thead>,
-        books: []
-    };
-
-    async componentDidMount() {
-        await fetch("/api/getBooks")
-            .then(res => res.json())
-            .then(books => {
-                books.map(
-                    el => {
-                        if(el.count > 0) {
-                            this.setState({
-                                books: [...this.state.books, 
-                                    <tr key={el.id}>
-                                        <td>{el.name.toUpperCase()}</td>
-                                        <td>{el.author}</td>
-                                        <td>{el.count}</td>
-                                        <td>{el.semester}</td>
-                                    </tr>]
-                            })
-                        }
-                        return el;
-                    })
-            });
-    }
-
-    render() {
-        return (
-            <div id='books'>
-                <span id="heading">AVAILABLE BOOKS</span>
-                <table id="results" className="table text-center table-hover">
-                    {this.state.header}
-                    <tbody>
-                        {this.state.books}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-}
+                </thead>
+                <tbody>
+                    {books.map(book => (
+                        <tr key={book.id}>
+                            <td>{book.name.toUpperCase()}</td>
+                            <td>{book.author}</td>
+                            <td>{book.title}</td>
+                          
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
 
 export default Books;

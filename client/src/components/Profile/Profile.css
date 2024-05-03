@@ -1,0 +1,21 @@
+/* Profile.css */
+h2 {
+    border: 2px solid #f321b4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.return-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.return-button:hover {
+    background-color: #e83508;
+}

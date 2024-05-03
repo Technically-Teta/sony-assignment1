@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {  Route, Routes } from 'react-router-dom';
 import Nav from './components/Nav/Nav';
 import Books from './components/Books/Books';
-import Profile from "./components/Authentication/Profile";
+import Profile from "./components/Profile/Profile";
 import Loading from "./components/Authentication/Loading";
 import AuthenticationButton from './components/Authentication/AuthenticationButton';
 import './App.css';
@@ -16,13 +16,13 @@ function App() {
   }
 
   return (
-    <div className="App"> 
+    <div className="App">   
       
         <Nav />
         <AuthenticationButton />
         <Routes>
           <Route path="/" exact element={<Books />} />
-          <Route path="api/myprofile" element={<Profile user={user}/>} /> 
+          <Route path="/myprofile" element={<Profile user={user}/>} /> 
         </Routes>
        
     </div>
